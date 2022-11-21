@@ -32,6 +32,16 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
   const data = req.body;
   res.json(data);
-
   console.log(data);
+  connection.query(
+    {
+      sql: "INSERT INTO movies (movie_name, movie_review) VALUES (?, ?)",
+      timeout: 40000, // 40s
+      values: ["Dil Se", "A movie about love"],
+    },
+    (error, results) => {
+      if (error) throw error;
+      console.log(results);
+    }
+  );
 });
