@@ -33,11 +33,13 @@ app.post("/", (req, res) => {
   const data = req.body;
   res.json(data);
   console.log(data);
+  const movie_name = data.movie_name;
+  const movie_review = data.movie_review;
   connection.query(
     {
       sql: "INSERT INTO movies (movie_name, movie_review) VALUES (?, ?)",
       timeout: 40000, // 40s
-      values: ["Dil Se", "A movie about love"],
+      values: [`${movie_name}`, `${movie_review}`],
     },
     (error, results) => {
       if (error) throw error;
