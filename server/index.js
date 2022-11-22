@@ -65,3 +65,22 @@ app.post("/api/insert", (req, res) => {
     }
   );
 });
+
+app.delete("/api/delete", (req, res) => {
+  const id = req.body.id;
+  connection.query(
+    {
+      sql: "DELETE FROM movies WHERE idnew_table = ?",
+      timeout: 40000, // 40s
+      values: [id],
+    },
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("success");
+        // console.log(results);
+      }
+    }
+  );
+});
