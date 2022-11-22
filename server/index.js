@@ -27,7 +27,7 @@ connection.connect((err) => {
 app.listen(PORT, () => {
   console.log("Server is running on port 3001");
 });
-
+//get request
 app.get("/api/get", (req, res) => {
   connection.query(
     {
@@ -43,7 +43,7 @@ app.get("/api/get", (req, res) => {
     }
   );
 });
-
+//post request
 app.post("/api/insert", (req, res) => {
   const data = req.body;
   res.json(data);
@@ -65,7 +65,7 @@ app.post("/api/insert", (req, res) => {
     }
   );
 });
-
+//delete request
 app.delete("/api/delete", (req, res) => {
   const id = req.body.id;
   connection.query(
@@ -73,6 +73,29 @@ app.delete("/api/delete", (req, res) => {
       sql: "DELETE FROM movies WHERE idnew_table = ?",
       timeout: 40000, // 40s
       values: [id],
+    },
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("success");
+        // console.log(results);
+      }
+    }
+  );
+});
+
+//update request
+app.put("/api/update", (req, res) => {
+  const id = req.body.id;
+  console.log(id);
+  const movie_review = req.body.review;
+  console.log(movie_review);
+  connection.query(
+    {
+      sql: "UPDATE movies SET movie_review = ? WHERE idnew_table = ?",
+      timeout: 40000, // 40s
+      values: [movie_review, id],
     },
     (err, results) => {
       if (err) {

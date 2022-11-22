@@ -6,6 +6,7 @@ function App() {
   const [movieName, setMovieName] = useState("");
   const [movieReview, setMovieReview] = useState("");
   const [movieList, setMovieList] = useState([]);
+  const [updateMovieReview, setUpdateReview] = useState("");
 
   const addReview = () => {
     Axios.post("http://localhost:3001/api/insert", {
@@ -35,6 +36,15 @@ function App() {
       },
     });
   };
+
+  const updateReview = (id) => {
+    Axios.put("http://localhost:3001/api/update", {
+      id: id,
+      review: updateMovieReview,
+    });
+    setUpdateReview("");
+  };
+
   return (
     <div className="App">
       <h1
@@ -103,8 +113,16 @@ function App() {
                     cols="30"
                     rows="4"
                     className="ml-2 border-solid border-2 border-sky-500 rounded-md"
+                    onChange={(e) => {
+                      setUpdateReview(e.target.value);
+                    }}
                   ></textarea>
-                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-4 w-40 self-center ">
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-4 w-40 self-center "
+                    onClick={() => {
+                      updateReview(val.idnew_table);
+                    }}
+                  >
                     Update
                   </button>
                 </div>
