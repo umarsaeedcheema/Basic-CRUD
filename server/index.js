@@ -3,6 +3,9 @@ const app = express();
 const mysql = require("mysql");
 const PORT = 3001;
 const cors = require("cors");
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors());
 //parsing data
@@ -25,25 +28,40 @@ app.listen(PORT, () => {
   console.log("Server is running on port 3001");
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
+app.get("/api/get", (req, res) => {
+  connection.query(
+    {
+      sql: "SELECT * FROM movies",
+      timeout: 40000, // 40s
+    },
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(results);
+      }
+    }
+  );
 });
 
-app.post("/", (req, res) => {
+app.post("/api/insert", (req, res) => {
   const data = req.body;
   res.json(data);
   console.log(data);
-  const movie_name = data.movie_name;
-  const movie_review = data.movie_review;
+  const movie_name = data.name;
+  const movie_review = data.review;
   connection.query(
     {
       sql: "INSERT INTO movies (movie_name, movie_review) VALUES (?, ?)",
       timeout: 40000, // 40s
-      values: [`${movie_name}`, `${movie_review}`],
+      values: [movie_name, movie_review],
     },
-    (error, results) => {
-      if (error) throw error;
-      console.log(results);
+    (err, results) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("success");
+      }
     }
   );
 });
