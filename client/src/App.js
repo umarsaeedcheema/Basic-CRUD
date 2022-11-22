@@ -7,18 +7,32 @@ function App() {
   const [movieReview, setMovieReview] = useState("");
   const [movieList, setMovieList] = useState([]);
 
-  useEffect(() => {
-    Axios.get("http://localhost:3001/api/get").then((response) => {
-      setMovieList(response.data);
-    });
-  }, []);
   const addReview = () => {
     Axios.post("http://localhost:3001/api/insert", {
       name: movieName,
       review: movieReview,
-    }).then((e) => {
-      console.log(e.data);
-      alert("success");
+    });
+    setMovieList([
+      ...movieList,
+      {
+        name: movieName,
+        review: movieReview,
+      },
+    ]);
+  };
+  useEffect(() => {
+    Axios.get("http://localhost:3001/api/get").then((response) => {
+      setMovieList(response.data);
+      console.log(response.data);
+    });
+  }, []);
+
+  const deleteReview = (id) => {
+    console.log(id);
+    Axios.delete("http://localhost:3001/api/delete", {
+      data: {
+        id: id,
+      },
     });
   };
   return (
@@ -43,14 +57,6 @@ function App() {
         />
 
         <label htmlFor="movie-review">Movie Review:</label>
-        {/* <input
-          type="text"
-          name="movie-review"
-          id="movie-review"
-          className="ml-2 border-solid border-2 border-sky-500 rounded-md width-auto"
-          cols="30"
-          rows="10"
-        /> */}
         <textarea
           name="movie-review"
           id="movie-review"
@@ -71,13 +77,37 @@ function App() {
       <div>
         {movieList.map((val) => {
           return (
-            <div className="flex flex-col justify-center items-center">
+            <div
+              key={val.id}
+              className="flex flex-col justify-center items-center"
+            >
               <div
                 className="flex flex-col justify-center items-center
             border-solid border-2 border-sky-500 rounded-md my-4 bg-gray-200 p-4"
               >
                 <h1>Movie Name: {val.movie_name}</h1>
                 <p>Review: {val.movie_review}</p>
+                <div className="flex flex-col">
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-4 w-40 self-center "
+                    onClick={() => {
+                      deleteReview(val.idnew_table);
+                    }}
+                  >
+                    Delete
+                  </button>
+                  <label htmlFor="update-review">Update Review:</label>
+                  <textarea
+                    name="update-review"
+                    id="update-review"
+                    cols="30"
+                    rows="4"
+                    className="ml-2 border-solid border-2 border-sky-500 rounded-md"
+                  ></textarea>
+                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-4 w-40 self-center ">
+                    Update
+                  </button>
+                </div>
               </div>
             </div>
           );
